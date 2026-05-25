@@ -48,7 +48,7 @@ export function EmiCalc() {
             <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
             <XAxis dataKey="year" label={{ value: "Year", position: "insideBottom", offset: -5 }} />
             <YAxis />
-            <Tooltip formatter={(v: number) => fmt(v)} />
+            <Tooltip formatter={(v) => fmt(Number(v))} />
             <Line type="monotone" dataKey="balance" stroke="hsl(var(--primary))" strokeWidth={2.5} dot={false} />
           </LineChart>
         </ResponsiveContainer>
