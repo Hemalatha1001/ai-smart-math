@@ -167,6 +167,10 @@
 
 @layer utilities {
   .glass {
+    background-color: color-mix(in oklab, var(--color-card) 92%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border) 80%, transparent);
+  }
+  .glass-blur {
     background-color: color-mix(in oklab, var(--color-card) 70%, transparent);
     backdrop-filter: blur(12px);
     border: 1px solid color-mix(in oklab, var(--color-border) 80%, transparent);

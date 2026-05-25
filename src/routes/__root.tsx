@@ -79,7 +79,7 @@ function RootComponent() {
           <div className="min-h-screen flex w-full gradient-soft">
             <AppSidebar />
             <div className="flex-1 flex flex-col min-w-0">
-              <header className="sticky top-0 z-30 h-14 flex items-center gap-3 border-b border-border bg-background/70 backdrop-blur-xl px-4">
+              <header className="sticky top-0 z-30 h-14 flex items-center gap-3 border-b border-border bg-background/95 px-4">
                 <SidebarTrigger />
                 <div className="text-sm text-muted-foreground hidden sm:block">
                   Smart calculations for everything in life
@@ -88,7 +88,7 @@ function RootComponent() {
                   10 calculators · AI-enhanced
                 </div>
               </header>
-              <main className="flex-1 p-4 md:p-8 gradient-mesh">
+              <main className="flex-1 p-4 md:p-8">
                 <Outlet />
               </main>
             </div>
