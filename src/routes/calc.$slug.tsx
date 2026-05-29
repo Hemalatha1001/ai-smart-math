@@ -29,13 +29,14 @@ export const Route = createFileRoute("/calc/$slug")({
   loader: ({ params }) => {
     const meta = getCalculator(params.slug);
     if (!meta) throw notFound();
-    return { meta };
+    // Return only serializable data — icon is a React component, look it up on the client
+    return { name: meta.name, description: meta.description };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.meta.name} — Calcverse` },
-          { name: "description", content: loaderData.meta.description },
+          { title: `${loaderData.name} — Calcverse` },
+          { name: "description", content: loaderData.description },
         ]
       : [],
   }),
@@ -55,7 +56,9 @@ export const Route = createFileRoute("/calc/$slug")({
 });
 
 function CalcPage() {
-  const { meta } = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  const meta = getCalculator(slug);
+  if (!meta) return null;
   const Component = MAP[meta.slug];
   return (
     <CalcShell title={meta.name} description={meta.description} icon={meta.icon} accent={meta.accent}>
