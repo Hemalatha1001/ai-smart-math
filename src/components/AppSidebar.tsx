@@ -8,12 +8,14 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
+import { useT } from "@/lib/i18n";
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const path = useRouterState({ select: (r) => r.location.pathname });
   const { theme, setTheme } = useTheme();
+  const { t } = useT();
 
   const isActive = (p: string) => path === p;
 
