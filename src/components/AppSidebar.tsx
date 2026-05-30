@@ -48,7 +48,7 @@ export function AppSidebar() {
                 <SidebarMenuButton asChild isActive={isActive("/")}>
                   <Link to="/" className="flex items-center gap-2">
                     <Home className="h-4 w-4" />
-                    {!collapsed && <span>Dashboard</span>}
+                    {!collapsed && <span>{t("dashboard")}</span>}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
