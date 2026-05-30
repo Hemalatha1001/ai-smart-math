@@ -58,7 +58,7 @@ export function AppSidebar() {
 
         {Object.entries(grouped).map(([cat, items]) => (
           <SidebarGroup key={cat}>
-            {!collapsed && <SidebarGroupLabel>{cat}</SidebarGroupLabel>}
+            {!collapsed && <SidebarGroupLabel>{t(cat)}</SidebarGroupLabel>}
             <SidebarGroupContent>
               <SidebarMenu>
                 {items.map((c) => {
