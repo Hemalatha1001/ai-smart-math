@@ -7,7 +7,9 @@ import appCss from "../styles.css?url";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LanguageProvider, useT, LANGUAGES, type Lang } from "@/lib/i18n";
 import { Toaster } from "@/components/ui/sonner";
+import { Globe } from "lucide-react";
 
 function NotFoundComponent() {
   return (
