@@ -1,6 +1,6 @@
 import {
   Calculator, FlaskConical, HeartPulse, Cake, Landmark,
-  Coins, Ruler, GraduationCap, Percent, Sparkles,
+  Coins, Ruler, GraduationCap, Percent, Sparkles, Bot, BrainCircuit,
   type LucideIcon,
 } from "lucide-react";
 
@@ -8,7 +8,7 @@ export type CalculatorMeta = {
   slug: string;
   name: string;
   description: string;
-  category: "Basic" | "Scientific" | "Health" | "Financial" | "Academic" | "Utility" | "AI";
+  category: "Basic" | "Scientific" | "Health" | "Financial" | "Academic" | "Utility" | "AI" | "Learn";
   icon: LucideIcon;
   accent: string;
 };
@@ -24,6 +24,8 @@ export const CALCULATORS: CalculatorMeta[] = [
   { slug: "gpa", name: "GPA / CGPA", description: "Track grades and semester averages", category: "Academic", icon: GraduationCap, accent: "from-purple-500 to-indigo-500" },
   { slug: "percentage", name: "Percentage", description: "Discount, change, profit & loss", category: "Basic", icon: Percent, accent: "from-lime-500 to-green-500" },
   { slug: "ai-solver", name: "AI Math Solver", description: "Expression solver with step-by-step", category: "AI", icon: Sparkles, accent: "from-indigo-500 via-purple-500 to-pink-500" },
+  { slug: "ai-tutor", name: "AI Math Tutor", description: "Chat with a friendly tutor — step-by-step", category: "Learn", icon: Bot, accent: "from-fuchsia-500 via-purple-500 to-indigo-500" },
+  { slug: "quiz", name: "Quiz & Practice", description: "Test yourself with math challenges", category: "Learn", icon: BrainCircuit, accent: "from-orange-500 via-rose-500 to-red-500" },
 ];
 
 export const getCalculator = (slug: string) =>

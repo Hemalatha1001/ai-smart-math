@@ -7,7 +7,9 @@ import appCss from "../styles.css?url";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LanguageProvider, useT, LANGUAGES, type Lang } from "@/lib/i18n";
 import { Toaster } from "@/components/ui/sonner";
+import { Globe } from "lucide-react";
 
 function NotFoundComponent() {
   return (
@@ -83,27 +85,47 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <SidebarProvider>
-          <div className="min-h-screen flex w-full gradient-soft">
-            <AppSidebar />
-            <div className="flex-1 flex flex-col min-w-0">
-              <header className="sticky top-0 z-30 h-14 flex items-center gap-3 border-b border-border bg-background/95 px-4">
-                <SidebarTrigger />
-                <div className="text-sm text-muted-foreground hidden sm:block">
-                  Smart calculations for everything in life
-                </div>
-                <div className="ml-auto text-xs text-muted-foreground hidden md:block">
-                  10 calculators · AI-enhanced
-                </div>
-              </header>
-              <main className="flex-1 p-4 md:p-8">
-                <Outlet />
-              </main>
+        <LanguageProvider>
+          <SidebarProvider>
+            <div className="min-h-screen flex w-full gradient-soft">
+              <AppSidebar />
+              <div className="flex-1 flex flex-col min-w-0">
+                <AppHeader />
+                <main className="flex-1 p-4 md:p-8">
+                  <Outlet />
+                </main>
+              </div>
             </div>
-          </div>
-          <Toaster />
-        </SidebarProvider>
+            <Toaster />
+          </SidebarProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </QueryClientProvider>
+  );
+}
+
+function AppHeader() {
+  const { t, lang, setLang } = useT();
+  return (
+    <header className="sticky top-0 z-30 h-14 flex items-center gap-3 border-b border-border bg-background/95 px-4">
+      <SidebarTrigger />
+      <div className="text-sm text-muted-foreground hidden sm:block">{t("tagline")}</div>
+      <div className="ml-auto flex items-center gap-3">
+        <div className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-2 py-1">
+          <Globe className="h-3.5 w-3.5 text-muted-foreground" />
+          <select
+            value={lang}
+            onChange={(e) => setLang(e.target.value as Lang)}
+            className="bg-transparent text-xs font-medium focus:outline-none cursor-pointer"
+            aria-label={t("language")}
+          >
+            {LANGUAGES.map((l) => (
+              <option key={l.code} value={l.code}>{l.native}</option>
+            ))}
+          </select>
+        </div>
+        <div className="text-xs text-muted-foreground hidden md:block">{t("meta")}</div>
+      </div>
+    </header>
   );
 }

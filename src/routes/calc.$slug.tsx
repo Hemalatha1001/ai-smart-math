@@ -11,6 +11,8 @@ import { UnitCalc } from "@/components/calc/UnitCalc";
 import { GpaCalc } from "@/components/calc/GpaCalc";
 import { PercentageCalc } from "@/components/calc/PercentageCalc";
 import { AiSolverCalc } from "@/components/calc/AiSolverCalc";
+import { AiTutorCalc } from "@/components/calc/AiTutorCalc";
+import { QuizCalc } from "@/components/calc/QuizCalc";
 
 const MAP: Record<string, () => React.ReactElement> = {
   basic: BasicCalc,
@@ -23,6 +25,8 @@ const MAP: Record<string, () => React.ReactElement> = {
   gpa: GpaCalc,
   percentage: PercentageCalc,
   "ai-solver": AiSolverCalc,
+  "ai-tutor": AiTutorCalc,
+  quiz: QuizCalc,
 };
 
 export const Route = createFileRoute("/calc/$slug")({

@@ -8,12 +8,14 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
+import { useT } from "@/lib/i18n";
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const path = useRouterState({ select: (r) => r.location.pathname });
   const { theme, setTheme } = useTheme();
+  const { t } = useT();
 
   const isActive = (p: string) => path === p;
 
@@ -46,7 +48,7 @@ export function AppSidebar() {
                 <SidebarMenuButton asChild isActive={isActive("/")}>
                   <Link to="/" className="flex items-center gap-2">
                     <Home className="h-4 w-4" />
-                    {!collapsed && <span>Dashboard</span>}
+                    {!collapsed && <span>{t("dashboard")}</span>}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -56,7 +58,7 @@ export function AppSidebar() {
 
         {Object.entries(grouped).map(([cat, items]) => (
           <SidebarGroup key={cat}>
-            {!collapsed && <SidebarGroupLabel>{cat}</SidebarGroupLabel>}
+            {!collapsed && <SidebarGroupLabel>{t(cat)}</SidebarGroupLabel>}
             <SidebarGroupContent>
               <SidebarMenu>
                 {items.map((c) => {
