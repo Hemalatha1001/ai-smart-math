@@ -1,6 +1,6 @@
 import {
   Calculator, FlaskConical, HeartPulse, Cake, Landmark,
-  Coins, Ruler, GraduationCap, Percent, Sparkles,
+  Coins, Ruler, GraduationCap, Percent, Sparkles, Bot, BrainCircuit,
   type LucideIcon,
 } from "lucide-react";
 
@@ -8,7 +8,7 @@ export type CalculatorMeta = {
   slug: string;
   name: string;
   description: string;
-  category: "Basic" | "Scientific" | "Health" | "Financial" | "Academic" | "Utility" | "AI";
+  category: "Basic" | "Scientific" | "Health" | "Financial" | "Academic" | "Utility" | "AI" | "Learn";
   icon: LucideIcon;
   accent: string;
 };
