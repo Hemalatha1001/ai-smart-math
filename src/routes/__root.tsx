@@ -130,6 +130,25 @@ function AppHeader() {
           </select>
         </div>
         <div className="text-xs text-muted-foreground hidden md:block">{t("meta")}</div>
+        {user ? (
+          <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground">
+              <UserIcon className="h-3.5 w-3.5" />
+              <span className="max-w-[140px] truncate">{user.email}</span>
+            </div>
+            <Button variant="ghost" size="sm" onClick={signOut}>
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Sign out</span>
+            </Button>
+          </div>
+        ) : (
+          <Link
+            to="/login"
+            className="rounded-lg gradient-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-elegant"
+          >
+            Sign in
+          </Link>
+        )}
       </div>
     </header>
   );
