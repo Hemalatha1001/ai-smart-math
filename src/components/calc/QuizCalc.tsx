@@ -130,6 +130,31 @@ export function QuizCalc() {
     setIndex((i) => i + 1);
   };
 
+  // persist when a run finishes
+  useEffect(() => {
+    if (!finished || !user) return;
+    const key = `${seed}-${topic}-${diff}`;
+    if (savedRef.current === key) return;
+    savedRef.current = key;
+    (async () => {
+      const { error: e1 } = await supabase.from("quiz_scores").insert({
+        user_id: user.id,
+        topic,
+        difficulty: diff,
+        score,
+        total: TOTAL,
+        best_streak: bestStreak,
+      });
+      if (e1) toast.error(e1.message);
+      await supabase.from("history").insert({
+        user_id: user.id,
+        type: "quiz",
+        title: `Quiz · ${topic} · ${diff}`,
+        detail: `Score ${score}/${TOTAL} · best streak ${bestStreak}`,
+      });
+    })();
+  }, [finished, user, seed, topic, diff, score, bestStreak]);
+
   if (!started) {
     return (
       <Card className="p-6 space-y-6">
