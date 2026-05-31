@@ -9,7 +9,9 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider, useT, LANGUAGES, type Lang } from "@/lib/i18n";
 import { Toaster } from "@/components/ui/sonner";
-import { Globe } from "lucide-react";
+import { Globe, LogOut, User as UserIcon } from "lucide-react";
+import { AuthProvider, useAuth } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
 
 function NotFoundComponent() {
   return (
@@ -85,20 +87,22 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <LanguageProvider>
-          <SidebarProvider>
-            <div className="min-h-screen flex w-full gradient-soft">
-              <AppSidebar />
-              <div className="flex-1 flex flex-col min-w-0">
-                <AppHeader />
-                <main className="flex-1 p-4 md:p-8">
-                  <Outlet />
-                </main>
+        <AuthProvider>
+          <LanguageProvider>
+            <SidebarProvider>
+              <div className="min-h-screen flex w-full gradient-soft">
+                <AppSidebar />
+                <div className="flex-1 flex flex-col min-w-0">
+                  <AppHeader />
+                  <main className="flex-1 p-4 md:p-8">
+                    <Outlet />
+                  </main>
+                </div>
               </div>
-            </div>
-            <Toaster />
-          </SidebarProvider>
-        </LanguageProvider>
+              <Toaster />
+            </SidebarProvider>
+          </LanguageProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
@@ -106,6 +110,7 @@ function RootComponent() {
 
 function AppHeader() {
   const { t, lang, setLang } = useT();
+  const { user, signOut } = useAuth();
   return (
     <header className="sticky top-0 z-30 h-14 flex items-center gap-3 border-b border-border bg-background/95 px-4">
       <SidebarTrigger />
@@ -125,6 +130,25 @@ function AppHeader() {
           </select>
         </div>
         <div className="text-xs text-muted-foreground hidden md:block">{t("meta")}</div>
+        {user ? (
+          <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground">
+              <UserIcon className="h-3.5 w-3.5" />
+              <span className="max-w-[140px] truncate">{user.email}</span>
+            </div>
+            <Button variant="ghost" size="sm" onClick={signOut}>
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Sign out</span>
+            </Button>
+          </div>
+        ) : (
+          <Link
+            to="/login"
+            className="rounded-lg gradient-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-elegant"
+          >
+            Sign in
+          </Link>
+        )}
       </div>
     </header>
   );

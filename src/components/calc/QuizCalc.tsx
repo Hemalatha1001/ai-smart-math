@@ -1,8 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Check, X, Trophy, Flame, RotateCw } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type Topic = "arithmetic" | "algebra" | "geometry";
 type Difficulty = "easy" | "medium" | "hard";
@@ -76,6 +79,8 @@ const TOTAL = 10;
 
 export function QuizCalc() {
   const { t } = useT();
+  const { user } = useAuth();
+  const savedRef = useRef<string | null>(null);
   const [topic, setTopic] = useState<Topic>("arithmetic");
   const [diff, setDiff] = useState<Difficulty>("easy");
   const [started, setStarted] = useState(false);
@@ -124,6 +129,31 @@ export function QuizCalc() {
     setSelected(null);
     setIndex((i) => i + 1);
   };
+
+  // persist when a run finishes
+  useEffect(() => {
+    if (!finished || !user) return;
+    const key = `${seed}-${topic}-${diff}`;
+    if (savedRef.current === key) return;
+    savedRef.current = key;
+    (async () => {
+      const { error: e1 } = await supabase.from("quiz_scores").insert({
+        user_id: user.id,
+        topic,
+        difficulty: diff,
+        score,
+        total: TOTAL,
+        best_streak: bestStreak,
+      });
+      if (e1) toast.error(e1.message);
+      await supabase.from("history").insert({
+        user_id: user.id,
+        type: "quiz",
+        title: `Quiz · ${topic} · ${diff}`,
+        detail: `Score ${score}/${TOTAL} · best streak ${bestStreak}`,
+      });
+    })();
+  }, [finished, user, seed, topic, diff, score, bestStreak]);
 
   if (!started) {
     return (

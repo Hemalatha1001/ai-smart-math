@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Moon, Sun } from "lucide-react";
+import { Home, Moon, Sun, History, Trophy } from "lucide-react";
 import { CALCULATORS } from "@/lib/calculators";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -49,6 +49,22 @@ export function AppSidebar() {
                   <Link to="/" className="flex items-center gap-2">
                     <Home className="h-4 w-4" />
                     {!collapsed && <span>{t("dashboard")}</span>}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive("/history")}>
+                  <Link to="/history" className="flex items-center gap-2">
+                    <History className="h-4 w-4" />
+                    {!collapsed && <span>History</span>}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive("/leaderboard")}>
+                  <Link to="/leaderboard" className="flex items-center gap-2">
+                    <Trophy className="h-4 w-4" />
+                    {!collapsed && <span>Leaderboard</span>}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
