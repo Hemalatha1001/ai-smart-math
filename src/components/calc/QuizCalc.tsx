@@ -1,8 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Check, X, Trophy, Flame, RotateCw } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type Topic = "arithmetic" | "algebra" | "geometry";
 type Difficulty = "easy" | "medium" | "hard";
@@ -76,6 +79,8 @@ const TOTAL = 10;
 
 export function QuizCalc() {
   const { t } = useT();
+  const { user } = useAuth();
+  const savedRef = useRef<string | null>(null);
   const [topic, setTopic] = useState<Topic>("arithmetic");
   const [diff, setDiff] = useState<Difficulty>("easy");
   const [started, setStarted] = useState(false);
