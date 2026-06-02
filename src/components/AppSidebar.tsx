@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Moon, Sun, History, Trophy } from "lucide-react";
+import { Home, Moon, Sun, History, Trophy, Shield } from "lucide-react";
+import { useEffect, useState } from "react";
 import { CALCULATORS } from "@/lib/calculators";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -9,6 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
 import { useT } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 
 export function AppSidebar() {
   const { state } = useSidebar();
@@ -16,6 +19,19 @@ export function AppSidebar() {
   const path = useRouterState({ select: (r) => r.location.pathname });
   const { theme, setTheme } = useTheme();
   const { t } = useT();
+  const { user } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!user) { setIsAdmin(false); return; }
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle()
+      .then(({ data }) => setIsAdmin(!!data));
+  }, [user?.id]);
 
   const isActive = (p: string) => path === p;
 
@@ -68,6 +84,16 @@ export function AppSidebar() {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              {isAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={isActive("/admin")}>
+                    <Link to="/admin" className="flex items-center gap-2">
+                      <Shield className="h-4 w-4" />
+                      {!collapsed && <span>Admin</span>}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
