@@ -19,6 +19,19 @@ export function AppSidebar() {
   const path = useRouterState({ select: (r) => r.location.pathname });
   const { theme, setTheme } = useTheme();
   const { t } = useT();
+  const { user } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!user) { setIsAdmin(false); return; }
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle()
+      .then(({ data }) => setIsAdmin(!!data));
+  }, [user?.id]);
 
   const isActive = (p: string) => path === p;
 
