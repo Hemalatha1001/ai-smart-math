@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Moon, Sun, History, Trophy } from "lucide-react";
+import { Home, Moon, Sun, History, Trophy, Shield } from "lucide-react";
+import { useEffect, useState } from "react";
 import { CALCULATORS } from "@/lib/calculators";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -9,6 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
 import { useT } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 
 export function AppSidebar() {
   const { state } = useSidebar();
