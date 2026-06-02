@@ -32,7 +32,7 @@ function LoginPage() {
     setBusy(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -41,10 +41,15 @@ function LoginPage() {
           },
         });
         if (error) throw error;
-        toast.success("Welcome to Calcverse!");
+        if (data.session) {
+          navigate({ to: "/", replace: true });
+        } else {
+          toast.success("Welcome to Calcverse! Please check your email to confirm.");
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        navigate({ to: "/", replace: true });
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Authentication failed");
