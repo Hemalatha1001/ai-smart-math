@@ -24,8 +24,8 @@ function LoginPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (user) navigate({ to: "/", replace: true });
-  }, [user, navigate]);
+    if (user) window.location.replace("/");
+  }, [user]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,14 +42,14 @@ function LoginPage() {
         });
         if (error) throw error;
         if (data.session) {
-          navigate({ to: "/", replace: true });
+          window.location.replace("/");
         } else {
           toast.success("Welcome to Calcverse! Please check your email to confirm.");
         }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate({ to: "/", replace: true });
+        window.location.replace("/");
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Authentication failed");
