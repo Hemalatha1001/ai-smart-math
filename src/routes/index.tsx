@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CALCULATORS } from "@/lib/calculators";
 import { Sparkles, TrendingUp, Zap } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { AuthCard } from "@/components/AuthCard";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -13,8 +15,39 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { user, loading } = useAuth();
   const popular = ["basic", "scientific", "emi", "bmi", "ai-solver", "unit"];
   const popularCalcs = popular.map((s) => CALCULATORS.find((c) => c.slug === s)!).filter(Boolean);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="space-y-8">
+        <section className="relative overflow-hidden rounded-3xl glass shadow-elegant p-8 md:p-12 text-center">
+          <div className="absolute inset-0 gradient-mesh opacity-60 pointer-events-none" />
+          <div className="relative max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+              <Sparkles className="h-3.5 w-3.5" /> Sign in to unlock Calcverse
+            </div>
+            <h1 className="mt-4 text-3xl md:text-5xl font-display font-bold tracking-tight">
+              Every calculator <span className="text-gradient">in one place</span>
+            </h1>
+            <p className="mt-3 text-base text-muted-foreground">
+              Create a free account to access all calculators, save history, and climb the leaderboard.
+            </p>
+          </div>
+        </section>
+        <AuthCard />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-12">
