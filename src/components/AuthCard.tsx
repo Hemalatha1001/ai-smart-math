@@ -95,15 +95,16 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
           {mode === "signin" && "Welcome back"}
           {mode === "signup" && "Create your account"}
           {mode === "forgot" && "Reset your password"}
+          {mode === "otp" && (otpSent ? "Enter your code" : "Sign in with email OTP")}
         </h1>
         <p className="text-sm text-muted-foreground">
-          {mode === "forgot"
-            ? "Enter your email and we'll send a reset link."
-            : "Sign in to unlock all calculators, history & leaderboard."}
+          {mode === "forgot" && "Enter your email and we'll send a reset link."}
+          {mode === "otp" && (otpSent ? `We sent a 6-digit code to ${email}.` : "We'll email you a one-time code — no password needed.")}
+          {(mode === "signin" || mode === "signup") && "Sign in to unlock all calculators, history & leaderboard."}
         </p>
       </div>
 
-      {mode !== "forgot" && (
+      {(mode === "signin" || mode === "signup" || mode === "otp") && !otpSent && (
         <>
           <Button type="button" variant="outline" className="w-full" onClick={google} disabled={busy}>
             <svg className="h-4 w-4" viewBox="0 0 24 24">
