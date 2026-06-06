@@ -22,7 +22,25 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
     e.preventDefault();
     setBusy(true);
     try {
-      if (mode === "signup") {
+      if (mode === "otp") {
+        if (!otpSent) {
+          const { error } = await supabase.auth.signInWithOtp({
+            email,
+            options: { emailRedirectTo: `${window.location.origin}/` },
+          });
+          if (error) throw error;
+          setOtpSent(true);
+          toast.success("OTP sent. Check your email for the 6-digit code.");
+        } else {
+          const { error } = await supabase.auth.verifyOtp({
+            email,
+            token: otpCode,
+            type: "email",
+          });
+          if (error) throw error;
+          onSuccess ? onSuccess() : window.location.replace("/");
+        }
+      } else if (mode === "signup") {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
