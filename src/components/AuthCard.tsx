@@ -113,11 +113,11 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
         </>
       )}
 
-      <form onSubmit={submit} className="space-y-3">
-        {mode === "signup" && (
-          <Input placeholder="Display name" value={name} onChange={(e) => setName(e.target.value)} maxLength={60} />
-        )}
-        {!(mode === "otp" && otpSent) && (
+      {!(mode === "otp" && otpSent) && (
+        <form onSubmit={submit} className="space-y-3">
+          {mode === "signup" && (
+            <Input placeholder="Display name" value={name} onChange={(e) => setName(e.target.value)} maxLength={60} />
+          )}
           <Input
             type="email"
             placeholder="you@example.com"
@@ -125,35 +125,24 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        )}
-        {(mode === "signin" || mode === "signup") && (
-          <Input
-            type="password"
-            placeholder="Password (min 6 chars)"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            minLength={6}
-            required
-          />
-        )}
-        {mode === "otp" && otpSent && (
-          <Input
-            inputMode="numeric"
-            placeholder="6-digit code"
-            value={otpCode}
-            onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-            maxLength={6}
-            required
-            autoFocus
-          />
-        )}
-        <Button type="submit" disabled={busy} className="w-full gradient-primary text-primary-foreground">
-          {mode === "signin" && "Sign in"}
-          {mode === "signup" && "Create account"}
-          {mode === "forgot" && "Send reset link"}
-          {mode === "otp" && (otpSent ? "Verify code" : "Send OTP code")}
-        </Button>
-      </form>
+          {(mode === "signin" || mode === "signup") && (
+            <Input
+              type="password"
+              placeholder="Password (min 6 chars)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              minLength={6}
+              required
+            />
+          )}
+          <Button type="submit" disabled={busy} className="w-full gradient-primary text-primary-foreground">
+            {mode === "signin" && "Sign in"}
+            {mode === "signup" && "Create account"}
+            {mode === "forgot" && "Send reset link"}
+            {mode === "otp" && "Send magic link"}
+          </Button>
+        </form>
+      )}
 
       {mode === "otp" && otpSent && (
         <div className="text-center text-sm">
