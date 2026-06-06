@@ -127,14 +127,16 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
         {mode === "signup" && (
           <Input placeholder="Display name" value={name} onChange={(e) => setName(e.target.value)} maxLength={60} />
         )}
-        <Input
-          type="email"
-          placeholder="you@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        {mode !== "forgot" && (
+        {!(mode === "otp" && otpSent) && (
+          <Input
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        )}
+        {(mode === "signin" || mode === "signup") && (
           <Input
             type="password"
             placeholder="Password (min 6 chars)"
@@ -144,15 +146,50 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
             required
           />
         )}
+        {mode === "otp" && otpSent && (
+          <Input
+            inputMode="numeric"
+            placeholder="6-digit code"
+            value={otpCode}
+            onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+            maxLength={6}
+            required
+            autoFocus
+          />
+        )}
         <Button type="submit" disabled={busy} className="w-full gradient-primary text-primary-foreground">
           {mode === "signin" && "Sign in"}
           {mode === "signup" && "Create account"}
           {mode === "forgot" && "Send reset link"}
+          {mode === "otp" && (otpSent ? "Verify code" : "Send OTP code")}
         </Button>
       </form>
 
+      {mode === "otp" && otpSent && (
+        <div className="text-center text-sm">
+          <button
+            onClick={() => { setOtpSent(false); setOtpCode(""); }}
+            className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+          >
+            ← Use a different email
+          </button>
+        </div>
+      )}
+      {mode === "otp" && !otpSent && (
+        <div className="flex items-center justify-between text-sm">
+          <button onClick={() => setMode("signin")} className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline">
+            Use password instead
+          </button>
+          <button onClick={() => setMode("signup")} className="text-primary underline-offset-4 hover:underline">
+            Create account
+          </button>
+        </div>
+      )}
       {mode === "signin" && (
         <div className="flex items-center justify-between text-sm">
+          <button onClick={() => { setMode("otp"); setOtpSent(false); }} className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline">
+            Email me a code
+          </button>
           <button onClick={() => setMode("forgot")} className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline">
             Forgot password?
           </button>
