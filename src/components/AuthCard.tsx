@@ -7,14 +7,16 @@ import { Card } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
-type Mode = "signin" | "signup" | "forgot";
+type Mode = "signin" | "signup" | "forgot" | "otp";
 
 export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
-  const [mode, setMode] = useState<Mode>("signin");
+  const [mode, setMode] = useState<Mode>("otp");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
