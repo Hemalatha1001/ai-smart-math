@@ -23,23 +23,13 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
     setBusy(true);
     try {
       if (mode === "otp") {
-        if (!otpSent) {
-          const { error } = await supabase.auth.signInWithOtp({
-            email,
-            options: { emailRedirectTo: `${window.location.origin}/` },
-          });
-          if (error) throw error;
-          setOtpSent(true);
-          toast.success("OTP sent. Check your email for the 6-digit code.");
-        } else {
-          const { error } = await supabase.auth.verifyOtp({
-            email,
-            token: otpCode,
-            type: "email",
-          });
-          if (error) throw error;
-          onSuccess ? onSuccess() : window.location.replace("/");
-        }
+        const { error } = await supabase.auth.signInWithOtp({
+          email,
+          options: { emailRedirectTo: `${window.location.origin}/` },
+        });
+        if (error) throw error;
+        setOtpSent(true);
+        toast.success("Magic link sent. Check your email and click the link to sign in.");
       } else if (mode === "signup") {
         const { data, error } = await supabase.auth.signUp({
           email,
@@ -95,11 +85,11 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
           {mode === "signin" && "Welcome back"}
           {mode === "signup" && "Create your account"}
           {mode === "forgot" && "Reset your password"}
-          {mode === "otp" && (otpSent ? "Enter your code" : "Sign in with email OTP")}
+          {mode === "otp" && (otpSent ? "Check your email" : "Sign in with a magic link")}
         </h1>
         <p className="text-sm text-muted-foreground">
           {mode === "forgot" && "Enter your email and we'll send a reset link."}
-          {mode === "otp" && (otpSent ? `We sent a 6-digit code to ${email}.` : "We'll email you a one-time code — no password needed.")}
+          {mode === "otp" && (otpSent ? `We sent a magic link to ${email}. Click the link in the email to sign in.` : "We'll email you a link — just click it to sign in. No password needed.")}
           {(mode === "signin" || mode === "signup") && "Sign in to unlock all calculators, history & leaderboard."}
         </p>
       </div>
@@ -123,11 +113,11 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
         </>
       )}
 
-      <form onSubmit={submit} className="space-y-3">
-        {mode === "signup" && (
-          <Input placeholder="Display name" value={name} onChange={(e) => setName(e.target.value)} maxLength={60} />
-        )}
-        {!(mode === "otp" && otpSent) && (
+      {!(mode === "otp" && otpSent) && (
+        <form onSubmit={submit} className="space-y-3">
+          {mode === "signup" && (
+            <Input placeholder="Display name" value={name} onChange={(e) => setName(e.target.value)} maxLength={60} />
+          )}
           <Input
             type="email"
             placeholder="you@example.com"
@@ -135,35 +125,24 @@ export function AuthCard({ onSuccess }: { onSuccess?: () => void }) {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        )}
-        {(mode === "signin" || mode === "signup") && (
-          <Input
-            type="password"
-            placeholder="Password (min 6 chars)"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            minLength={6}
-            required
-          />
-        )}
-        {mode === "otp" && otpSent && (
-          <Input
-            inputMode="numeric"
-            placeholder="6-digit code"
-            value={otpCode}
-            onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-            maxLength={6}
-            required
-            autoFocus
-          />
-        )}
-        <Button type="submit" disabled={busy} className="w-full gradient-primary text-primary-foreground">
-          {mode === "signin" && "Sign in"}
-          {mode === "signup" && "Create account"}
-          {mode === "forgot" && "Send reset link"}
-          {mode === "otp" && (otpSent ? "Verify code" : "Send OTP code")}
-        </Button>
-      </form>
+          {(mode === "signin" || mode === "signup") && (
+            <Input
+              type="password"
+              placeholder="Password (min 6 chars)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              minLength={6}
+              required
+            />
+          )}
+          <Button type="submit" disabled={busy} className="w-full gradient-primary text-primary-foreground">
+            {mode === "signin" && "Sign in"}
+            {mode === "signup" && "Create account"}
+            {mode === "forgot" && "Send reset link"}
+            {mode === "otp" && "Send magic link"}
+          </Button>
+        </form>
+      )}
 
       {mode === "otp" && otpSent && (
         <div className="text-center text-sm">
